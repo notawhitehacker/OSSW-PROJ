@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>약품 정보 검색</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>💊 약품 정보 & 추천 시스템</h2>
+
+    <form method="POST">
+        <input type="radio" name="mode" value="name" checked> 약품명 검색
+        <input type="radio" name="mode" value="effect"> 증상으로 추천
+        <br><br>
+        <input type="text" name="keyword" placeholder="예: 타이레놀 또는 해열" value="{{ keyword }}">
+        <input type="submit" value="검색">
+    </form>
+
+    {% if result %}
+        <h3>🔍 검색 결과</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>약품 이미지</th>
+                    <th>약품명</th>
+                    <th>주요 성분</th>
+                    <th>효과</th>
+                    <th>복용 방법</th>
+                    <th>제약사</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in result %}
+                <tr>
+                    <td>
+                        {% if row[6] %}
+                        <img src="{{ url_for('static', filename=row[6].lstrip('/')) }}" alt="image" width="100">
+                        {% else %}
+                        없음
+                        {% endif %}
+                    </td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif result is not none %}
+        <p>😥 검색 결과가 없습니다.</p>
+    {% endif %}
+</body>
+</html>
